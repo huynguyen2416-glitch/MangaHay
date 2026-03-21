@@ -1,0 +1,57 @@
+/* 3 dòng bắt buộc của Tailwind - PHẢI ĐỂ Ở TRÊN CÙNG */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   1. LAYER BASE: Định nghĩa lại các thẻ HTML gốc
+   ========================================= */
+@layer base {
+    /* Mặc định màu nền web và màu chữ */
+    body {
+        @apply bg-gray-100 text-gray-900 antialiased font-sans;
+    }
+
+    /* Tùy chỉnh thanh cuộn (Scrollbar) cho giống web truyện */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-200;
+    }
+    ::-webkit-scrollbar-thumb {
+        @apply bg-orange-500 rounded-full;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-orange-600;
+    }
+}
+
+/* =========================================
+   2. LAYER COMPONENTS: Gói gọn class Tailwind 
+   (Giúp file React của bạn không bị 1 đống class dài ngoằng)
+   ========================================= */
+@layer components {
+    /* Nút bấm chuẩn của MangaHay */
+    .btn-manga {
+        @apply bg-orange-500 text-white font-semibold py-2 px-4 rounded hover:bg-orange-600 transition duration-200 shadow-sm hover:shadow;
+    }
+
+    /* Khung hiển thị 1 bộ truyện (Card) */
+    .manga-card {
+        @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer;
+    }
+
+    /* Tiêu đề truyện bị giới hạn 2 dòng (nếu dài quá tự thêm dấu ...) */
+    .title-clamp {
+        @apply text-lg font-bold text-gray-800 line-clamp-2;
+    }
+}
+
+/* =========================================
+   3. CSS THUẦN: Viết css bình thường ở đây
+   ========================================= */
+.image-zoom-hover:hover img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
