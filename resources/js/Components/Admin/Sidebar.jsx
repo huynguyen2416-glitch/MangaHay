@@ -54,12 +54,12 @@ export default function Sidebar() {
                     <i className={`fas fa-book w-5 text-center ${isOpen ? 'mr-3' : 'mr-0'} group-hover:scale-110 transition-transform`}></i>
                     {isOpen && <span className="truncate">User</span>}
                 </Link>
-                <Link href="#" className={`flex items-center px-3 py-2.5 text-gray-600 hover:bg-orange-50 hover:text-orange-600 rounded-lg font-medium transition group ${!isOpen && 'justify-center'}`}>
+                <Link href={route('admin.truyen.index')} className={`flex items-center px-3 py-2.5 text-gray-600 hover:bg-orange-50 hover:text-orange-600 rounded-lg font-medium transition group ${!isOpen && 'justify-center'}`}>
                     <i className={`fas fa-book w-5 text-center ${isOpen ? 'mr-3' : 'mr-0'} group-hover:scale-110 transition-transform`}></i>
                     {isOpen && <span className="truncate">Truyện</span>}
                 </Link>
 
-                <Link href="#" className={`flex items-center px-3 py-2.5 text-gray-600 hover:bg-orange-50 hover:text-orange-600 rounded-lg font-medium transition group ${!isOpen && 'justify-center'}`}>
+                <Link href={route('admin.chap.index')} className={`flex items-center px-3 py-2.5 text-gray-600 hover:bg-orange-50 hover:text-orange-600 rounded-lg font-medium transition group ${!isOpen && 'justify-center'}`}>
                     <i className={`fas fa-list-ol w-5 text-center ${isOpen ? 'mr-3' : 'mr-0'} group-hover:scale-110 transition-transform`}></i>
                     {isOpen && <span className="truncate">Chapter</span>}
                 </Link>

@@ -3,7 +3,6 @@ import { Link, Head } from '@inertiajs/react';
 import ClientLayout from '@/Layouts/ClientLayout';
 
 export default function Reader({ manga, chapter, images = [], prevUrl, nextUrl }) {
-    // Nếu không có dữ liệu chapter (tránh lỗi)
     if (!chapter || !manga) {
         return (
             <ClientLayout hideSidebar={true}>
@@ -14,22 +13,32 @@ export default function Reader({ manga, chapter, images = [], prevUrl, nextUrl }
         );
     }
 
+    // --- BƯỚC QUAN TRỌNG: GIẢI MÃ CHUỖI JSON THÀNH MẢNG ẢNH ---
+    let danhSachAnh = [];
+    try {
+        // Ưu tiên lấy từ prop images, nếu không có thì lấy từ chapter.danh_sach_anh
+        const rawData = images.length > 0 ? images : (chapter.danh_sach_anh || '[]');
+        // Nếu nó là chuỗi thì dịch ra (JSON.parse), nếu là mảng sẵn rồi thì giữ nguyên
+        danhSachAnh = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+    } catch (e) {
+        console.error("Lỗi tải ảnh:", e);
+    }
+
     return (
-        // Thêm hideSidebar={true} để ẩn thanh bên phải, mở rộng không gian đọc
         <ClientLayout hideSidebar={true}>
-            <Head title={`${chapter.name} - ${manga.title}`} />
+            {/* Sử dụng ten_chap và ten_truyen */}
+            <Head title={`${chapter.ten_chap || 'Đang đọc'} - ${manga.ten_truyen}`} />
 
             <div className="flex flex-col items-center max-w-4xl mx-auto w-full">
                 
-                {/* 1. THANH ĐIỀU HƯỚNG TRÊN CÙNG */}
+                {/* 1. THANH ĐIỀU HƯỚNG */}
                 <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6 text-center">
-                    {/* Đường dẫn truyện */}
-                    <Link href={route('manga.show', manga.id)} className="text-2xl font-black text-gray-800 hover:text-orange-500 transition">
-                        {manga.title}
+                    {/* Sửa lại route thêm client. */}
+                    <Link href={route('client.manga.show', manga.id)} className="text-2xl font-black text-gray-800 hover:text-orange-500 transition">
+                        {manga.ten_truyen}
                     </Link>
-                    <h2 className="text-lg font-semibold text-gray-600 mt-1 mb-4">{chapter.name}</h2>
+                    <h2 className="text-lg font-semibold text-gray-600 mt-1 mb-4">{chapter.ten_chap || `Chương ${chapter.so_chuong}`}</h2>
 
-                    {/* Nút Chuyển Chương */}
                     <div className="flex justify-center items-center gap-3">
                         {prevUrl ? (
                             <Link href={prevUrl} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded transition">
@@ -41,7 +50,7 @@ export default function Reader({ manga, chapter, images = [], prevUrl, nextUrl }
                             </button>
                         )}
 
-                        <Link href={route('manga.show', manga.id)} className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded transition">
+                        <Link href={route('client.manga.show', manga.id)} className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded transition">
                             <i className="fas fa-list"></i>
                         </Link>
 
@@ -57,16 +66,16 @@ export default function Reader({ manga, chapter, images = [], prevUrl, nextUrl }
                     </div>
                 </div>
 
-                {/* 2. KHU VỰC HIỂN THỊ ẢNH TRUYỆN */}
+                {/* 2. KHU VỰC HIỂN THỊ ẢNH ĐÃ SỬA */}
                 <div className="w-full bg-black rounded shadow-md overflow-hidden flex flex-col items-center min-h-[500px]">
-                    {images.length > 0 ? (
-                        images.map((img, index) => (
+                    {danhSachAnh && danhSachAnh.length > 0 ? (
+                        danhSachAnh.map((img, index) => (
                             <img 
                                 key={index} 
-                                src={img.url || img} // Tuỳ vào dữ liệu backend trả về dạng object hay mảng chuỗi
-                                alt={`Page ${index + 1}`} 
+                                src={img.url || img} // Hỗ trợ cả object và link chuỗi
+                                alt={`Trang ${index + 1}`} 
                                 className="w-full max-w-full h-auto object-contain block m-0 p-0"
-                                loading="lazy" // Giúp tải ảnh mượt hơn, cuộn tới đâu tải tới đó
+                                loading="lazy"
                             />
                         ))
                     ) : (
@@ -74,7 +83,7 @@ export default function Reader({ manga, chapter, images = [], prevUrl, nextUrl }
                     )}
                 </div>
 
-                {/* 3. THANH ĐIỀU HƯỚNG DƯỚI CÙNG (Giống y hệt thanh trên để đỡ phải cuộn lên) */}
+                {/* 3. THANH ĐIỀU HƯỚNG DƯỚI */}
                 <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-6 text-center">
                     <div className="flex justify-center items-center gap-3">
                         {prevUrl ? (
@@ -87,7 +96,7 @@ export default function Reader({ manga, chapter, images = [], prevUrl, nextUrl }
                             </button>
                         )}
 
-                        <Link href={route('manga.show', manga.id)} className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded transition">
+                        <Link href={route('client.manga.show', manga.id)} className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded transition">
                             <i className="fas fa-list"></i> Cùng bộ truyện
                         </Link>
 

@@ -10,7 +10,14 @@ class Chap extends Model
     use HasFactory;
 
     protected $table = 'chaps';
-    // Chương này thuộc về 1 Truyện
+    protected $fillable = [
+        'id_manga',
+        'ten_chap',
+        'so_chuong',
+        'noi_dung_chu',
+        'danh_sach_anh',
+        'gia_coin'
+    ];
     public function truyen()
     {
         return $this->belongsTo(Truyen::class, 'id_manga', 'id');

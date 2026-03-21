@@ -16,7 +16,7 @@ class TruyenController extends Controller
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-        return Inertia::render('Client/Detail', [
+        return Inertia::render('Client/Manga/truyen', [
             'manga' => $manga,
             'chapters' => $chapters
         ]);

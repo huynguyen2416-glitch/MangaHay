@@ -18,33 +18,31 @@ export default function Detail({ manga, chapters = [] }) {
             {/* 1. KHỐI THÔNG TIN TRUYỆN */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                 <div className="flex flex-col md:flex-row gap-8">
-                    {/* Ảnh bìa */}
+                    {/* Ảnh bìa (Khớp với cột anh_bia) */}
                     <div className="w-full md:w-1/4 flex-shrink-0">
                         <img 
-                            src={manga.cover || '/images/default-cover.jpg'} 
-                            alt={manga.title} 
+                            src={manga.anh_bia || '/images/default-cover.jpg'} 
+                            alt={manga.ten_truyen} 
                             className="w-full h-auto rounded-lg shadow-md object-cover aspect-[2/3]"
                         />
                     </div>
 
                     {/* Chi tiết thông tin */}
                     <div className="w-full md:w-3/4 flex flex-col">
-                        <h1 className="text-3xl font-black text-gray-800 mb-2">{manga.title}</h1>
+                        <h1 className="text-3xl font-black text-gray-800 mb-2">{manga.ten_truyen}</h1>
                         
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4 border-b border-gray-100 pb-4">
-                            <span className="flex items-center gap-1"><i className="fas fa-user text-orange-500"></i> {manga.author || 'Đang cập nhật'}</span>
-                            <span className="flex items-center gap-1"><i className="fas fa-rss text-orange-500"></i> {manga.status || 'Đang tiến hành'}</span>
-                            <span className="flex items-center gap-1"><i className="fas fa-eye text-orange-500"></i> {manga.views || 0}</span>
-                            <span className="flex items-center gap-1 text-yellow-500 font-bold"><i className="fas fa-star"></i> {manga.rating || '5.0'}</span>
+                            <span className="flex items-center gap-1"><i className="fas fa-user text-orange-500"></i> {manga.tac_gia || 'Đang cập nhật'}</span>
+                            <span className="flex items-center gap-1"><i className="fas fa-rss text-orange-500"></i> {manga.trang_thai === 1 ? 'Đã hoàn thành' : 'Đang tiến hành'}</span>
+                            <span className="flex items-center gap-1"><i className="fas fa-eye text-orange-500"></i> {manga.luot_xem || 0}</span>
                         </div>
 
-                        {/* Thể loại (Tags) */}
+                        {/* Thể loại */}
                         <div className="flex flex-wrap gap-2 mb-4">
-                            {/* Chú ý: Tùy theo cách bạn thiết kế Database mà gọi tên biến cho đúng (genres hoặc categories) */}
-                            {manga.genres && manga.genres.length > 0 ? (
-                                manga.genres.map((genre, index) => (
+                            {manga.theloais && manga.theloais.length > 0 ? (
+                                manga.theloais.map((theloai, index) => (
                                     <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full border border-gray-200 hover:bg-orange-50 hover:text-orange-600 transition cursor-pointer">
-                                        {genre.name || genre} 
+                                        {theloai.ten_the_loai || theloai.ten} 
                                     </span>
                                 ))
                             ) : (
@@ -52,24 +50,11 @@ export default function Detail({ manga, chapters = [] }) {
                             )}
                         </div>
 
-                        {/* Nút hành động */}
-                        <div className="flex flex-wrap gap-3 mb-6 mt-2">
-                            <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition flex items-center gap-2">
-                                <i className="fas fa-book-open"></i> Đọc từ đầu
-                            </button>
-                            <button className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition flex items-center gap-2">
-                                <i className="fas fa-bolt text-yellow-400"></i> Đọc mới nhất
-                            </button>
-                            <button className="bg-red-50 hover:bg-red-100 text-red-500 font-bold py-2.5 px-6 rounded-lg border border-red-200 transition flex items-center gap-2">
-                                <i className="fas fa-heart"></i> Theo dõi
-                            </button>
-                        </div>
-
-                        {/* Tóm tắt nội dung */}
+                        {/* Tóm tắt nội dung (Khớp với cột tom_tat) */}
                         <div className="mt-auto">
                             <h3 className="text-lg font-bold text-gray-800 mb-2 border-l-4 border-orange-500 pl-3">Tóm tắt nội dung</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-justify">
-                                {manga.description || 'Chưa có tóm tắt cho truyện này.'}
+                                {manga.tom_tat || 'Chưa có tóm tắt cho truyện này.'}
                             </p>
                         </div>
                     </div>
@@ -90,17 +75,16 @@ export default function Detail({ manga, chapters = [] }) {
                         {chapters.length > 0 ? (
                             chapters.map((chapter) => (
                                 <li key={chapter.id} className="hover:bg-orange-50 transition">
-                                    {/* Nhớ truyền đúng route đọc truyện của bạn vào href */}
-                                    <Link href={route('chapter.show', chapter.id)} className="flex justify-between items-center px-6 py-4">
+                                    {/* Sửa lại route thêm chữ client. */}
+                                    <Link href={route('client.chapter.show', chapter.id)} className="flex justify-between items-center px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <span className="text-gray-800 font-semibold text-sm hover:text-orange-600 transition">
-                                                {chapter.name}
+                                                {chapter.ten_chap || `Chương ${chapter.so_chuong}`}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-6 text-xs text-gray-500">
-                                            <span className="hidden sm:block"><i className="far fa-eye mr-1"></i> {chapter.views || 0}</span>
-                                            {/* Format ngày tháng tuỳ theo định dạng từ backend */}
-                                            <span><i className="far fa-clock mr-1"></i> {chapter.created_at || 'Mới đây'}</span> 
+                                            <span className="hidden sm:block"><i className="far fa-eye mr-1"></i> {chapter.luot_xem || 0}</span>
+                                            <span><i className="far fa-clock mr-1"></i> Mới cập nhật</span> 
                                         </div>
                                     </Link>
                                 </li>

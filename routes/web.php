@@ -3,6 +3,8 @@ use App\Http\Controllers\Client\TruyenController;
 use App\Http\Controllers\Client\ChapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\TruyenController as AdminTruyenController;
+use App\Http\Controllers\Admin\ChapController as AdminChapController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; 
@@ -47,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
 });
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
+    Route::resource('truyen', AdminTruyenController::class);
+    Route::resource('chap', AdminChapController::class);
 });
 
 
