@@ -44,10 +44,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    /**
-     * Liên kết với bảng roles
-     */
     public function role()
     {
         return $this->belongsTo(Role::class, 'id_vaitro', 'id');

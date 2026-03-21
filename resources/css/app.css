@@ -9,7 +9,7 @@
 @layer base {
     /* Mặc định màu nền web và màu chữ */
     body {
-        @apply bg-gray-100 text-gray-900 antialiased font-sans;
+        @apply bg-gray-200 text-gray-900 antialiased font-sans min-h-screen;
     }
 
     /* Tùy chỉnh thanh cuộn (Scrollbar) cho giống web truyện */

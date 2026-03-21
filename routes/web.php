@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\Client\TruyenController;
+use App\Http\Controllers\Client\ChapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,15 @@ Route::get('/', function () {
         'truyen' => $truyen
     ]);
 })->name('home');
-
+Route::group(['as' => 'client.'], function () {
+    
+    // Link xem chi tiết truyện: web.com/truyen/1
+    Route::get('/truyen/{id}', [TruyenController::class, 'show'])->name('manga.show');
+    
+    // Link đọc truyện: web.com/chuong/15
+    Route::get('/chuong/{id}', [ChapController::class, 'show'])->name('chapter.show');
+    
+});
 
 
 // 2. ROUTE ADMIN

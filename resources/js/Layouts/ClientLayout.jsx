@@ -5,7 +5,7 @@ import Footer from '@/Components/Client/Footer';
 
 export default function ClientLayout({ children, hideSidebar = false }) {
     return (
-        <div className="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+        <div className="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
             
             <Header />
 
