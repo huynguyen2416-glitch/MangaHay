@@ -8,13 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Truyen extends Model
 {
     use HasFactory;
-
+    
     protected $table = 'truyen';
-
     protected $fillable = [
-        'id_nguoidang', 'ten_truyen', 'mo_ta', 'tac_gia', 'anh_bia', 'trang_thai'
+        'id_nguoidang',   
+        'ten_truyen', 
+        'mo_ta', 
+        'tac_gia', 
+        'anh_bia', 
+        'trang_thai'
     ];
-
     // Truyện này thuộc về 1 người đăng (User)
     public function nguoiDang()
     {

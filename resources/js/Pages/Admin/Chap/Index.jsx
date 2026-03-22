@@ -45,7 +45,7 @@ export default function Index({ auth, chaps }) {
                                                 <td className="px-4 py-2 border font-semibold text-blue-600">
                                                     {chap.truyen ? chap.truyen.ten_truyen : 'Truyện đã xóa'}
                                                 </td>
-                                                <td className="px-4 py-2 border">{chap.ten_chap}</td>
+                                                <td className="px-4 py-2 border">{chap.tieu_de}</td>
                                                 <td className="px-4 py-2 border">{chap.so_chuong}</td>
                                                 <td className="px-4 py-2 border text-center space-x-2">
                                                     <Link href={route('admin.chap.edit', chap.id)} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">

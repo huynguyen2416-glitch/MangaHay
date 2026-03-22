@@ -7,7 +7,7 @@ export default function Create({ auth }) {
     const { data, setData, post, processing, errors } = useForm({
         ten_truyen: '',
         anh_bia: '',
-        tom_tat: '',
+        mo_ta: '',
         // Thêm các trường khác nếu DB bạn yêu cầu (VD: tac_gia, trang_thai)
     });
 
@@ -57,12 +57,12 @@ export default function Create({ auth }) {
                                 <label className="block text-sm font-medium text-gray-700">Tóm tắt nội dung</label>
                                 <textarea 
                                     rows="5"
-                                    value={data.tom_tat}
-                                    onChange={(e) => setData('tom_tat', e.target.value)}
+                                    value={data.mo_ta}
+                                    onChange={(e) => setData('mo_ta', e.target.value)}
                                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="Nhập tóm tắt..."
                                 ></textarea>
-                                {errors.tom_tat && <div className="text-red-500 text-sm mt-1">{errors.tom_tat}</div>}
+                                {errors.mo_ta && <div className="text-red-500 text-sm mt-1">{errors.mo_ta}</div>}
                             </div>
 
                             {/* Nút hành động */}

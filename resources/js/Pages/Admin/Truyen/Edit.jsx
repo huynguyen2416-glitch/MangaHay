@@ -7,7 +7,7 @@ export default function Edit({ auth, truyen }) {
     const { data, setData, post, processing, errors } = useForm({
         ten_truyen: truyen.ten_truyen || '',
         anh_bia: null, // Đặt là null để nhận file mới
-        tom_tat: truyen.tom_tat || '',
+        mo_ta: truyen.mo_ta || '',
         _method: 'put', 
     });
 
@@ -60,11 +60,11 @@ export default function Edit({ auth, truyen }) {
                                 <label className="block text-sm font-medium text-gray-700">Tóm tắt nội dung</label>
                                 <textarea 
                                     rows="5"
-                                    value={data.tom_tat}
-                                    onChange={(e) => setData('tom_tat', e.target.value)}
+                                    value={data.mo_ta}
+                                    onChange={(e) => setData('mo_ta', e.target.value)}
                                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                 ></textarea>
-                                {errors.tom_tat && <div className="text-red-500 text-sm mt-1">{errors.tom_tat}</div>}
+                                {errors.mo_ta && <div className="text-red-500 text-sm mt-1">{errors.mo_ta}</div>}
                             </div>
 
                             <div className="flex items-center justify-end space-x-3 mt-6 border-t pt-4">

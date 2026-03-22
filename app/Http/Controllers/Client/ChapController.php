@@ -15,18 +15,16 @@ class ChapController extends Controller
         $chapter = Chap::findOrFail($id);
         $manga = Truyen::findOrFail($chapter->id_manga);
 
-        // Lấy dữ liệu từ cột chứa ảnh (Giả sử cột của bạn tên là 'noi_dung')
-        // Nếu tên cột của bạn khác (ví dụ: 'link_anh', 'images'), hãy thay 'noi_dung' bằng tên đó nhé.
-        $imagesData = $chapter->noi_dung; 
+
+        $imagesData = $chapter->danh_sach_anh; 
         
         // Giải mã chuỗi JSON thành mảng. Nếu lỗi hoặc rỗng thì gán là mảng rỗng []
         $images = is_string($imagesData) ? json_decode($imagesData, true) : $imagesData;
         if (!is_array($images)) {
             $images = []; 
         }
-        // ---------------------------
 
-        // Tìm chương Trước / Sau
+        // Tìm chương Trước / Sau (Cũ hơn / Mới hơn)
         $prevChapter = Chap::where('id_manga', $manga->id)
                             ->where('so_chuong', '<', $chapter->so_chuong)
                             ->orderBy('so_chuong', 'desc')
@@ -37,12 +35,19 @@ class ChapController extends Controller
                             ->orderBy('so_chuong', 'asc')
                             ->first();
 
+        // LẤY THÊM: Danh sách các chương để làm Menu Dropdown (Xếp từ mới -> cũ)
+   
+        $danhSachChuong = Chap::where('id_manga', $manga->id)
+                            ->orderBy('so_chuong', 'desc')
+                            ->get(['id', 'so_chuong', 'tieu_de']);
+
         return Inertia::render('Client/Manga/chap', [
             'manga' => $manga,
             'chapter' => $chapter,
             'images' => $images,
             'prevUrl' => $prevChapter ? route('client.chapter.show', $prevChapter->id) : null,
             'nextUrl' => $nextChapter ? route('client.chapter.show', $nextChapter->id) : null,
+            'danhSachChuong' => $danhSachChuong, // Gửi qua React
         ]);
     }
 }

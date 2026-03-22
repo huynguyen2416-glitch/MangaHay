@@ -13,7 +13,7 @@ class TruyenController extends Controller
     {
         $manga = Truyen::findOrFail($id); 
         $chapters = Chap::where('id_manga', $id) 
-                        ->orderBy('created_at', 'desc')
+                        ->orderBy('id', 'desc')
                         ->get();
 
         return Inertia::render('Client/Manga/truyen', [

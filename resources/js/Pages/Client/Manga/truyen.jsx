@@ -50,11 +50,11 @@ export default function Detail({ manga, chapters = [] }) {
                             )}
                         </div>
 
-                        {/* Tóm tắt nội dung (Khớp với cột tom_tat) */}
+                        {/* Tóm tắt nội dung (Khớp với cột mo_ta) */}
                         <div className="mt-auto">
-                            <h3 className="text-lg font-bold text-gray-800 mb-2 border-l-4 border-orange-500 pl-3">Tóm tắt nội dung</h3>
+                            <h3 className="text-lg font-bold text-gray-800 mb-2 border-l-4 border-orange-500 pl-3">Mô tả nội dung</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-justify">
-                                {manga.tom_tat || 'Chưa có tóm tắt cho truyện này.'}
+                                {manga.mo_ta || 'Chưa có mô tả cho truyện này.'}
                             </p>
                         </div>
                     </div>
@@ -75,16 +75,15 @@ export default function Detail({ manga, chapters = [] }) {
                         {chapters.length > 0 ? (
                             chapters.map((chapter) => (
                                 <li key={chapter.id} className="hover:bg-orange-50 transition">
-                                    {/* Sửa lại route thêm chữ client. */}
                                     <Link href={route('client.chapter.show', chapter.id)} className="flex justify-between items-center px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <span className="text-gray-800 font-semibold text-sm hover:text-orange-600 transition">
-                                                {chapter.ten_chap || `Chương ${chapter.so_chuong}`}
+                                           <span className="text-gray-800 font-semibold text-sm hover:text-orange-600 transition">
+                                                {chapter.tieu_de || `Chương ${chapter.so_chuong}`}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-6 text-xs text-gray-500">
                                             <span className="hidden sm:block"><i className="far fa-eye mr-1"></i> {chapter.luot_xem || 0}</span>
-                                            <span><i className="far fa-clock mr-1"></i> Mới cập nhật</span> 
+                                            <span><i className="far fa-clock mr-1"></i> {chapter.updated_at ? new Date(chapter.updated_at).toLocaleDateString() : 'Chưa cập nhật'}</span>
                                         </div>
                                     </Link>
                                 </li>

@@ -6,7 +6,7 @@ export default function CreateChap({ auth, truyens }) {
     // 1. Quản lý form data (Giữ nguyên các biến của bạn)
     const { data, setData, post, processing, errors } = useForm({
         id_manga: '',
-        ten_chap: '',
+        tieu_de: '',
         so_chuong: '',
         noi_dung: [], // Mảng chứa các file ảnh thực tế để gửi lên server
     });
@@ -92,12 +92,12 @@ export default function CreateChap({ auth, truyens }) {
                                     <label className="block text-sm font-medium text-gray-700">Tên Chapter (VD: Chapter 1 - Mở đầu)</label>
                                     <input 
                                         type="text" 
-                                        value={data.ten_chap} 
-                                        onChange={e => setData('ten_chap', e.target.value)}
+                                        value={data.tieu_de} 
+                                        onChange={e => setData('tieu_de', e.target.value)}
                                         className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                         required
                                     />
-                                    {errors.ten_chap && <div className="text-red-500 text-sm mt-1">{errors.ten_chap}</div>}
+                                    {errors.tieu_de && <div className="text-red-500 text-sm mt-1">{errors.tieu_de}</div>}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Số thứ tự chương (VD: 1, 1.5, 2)</label>

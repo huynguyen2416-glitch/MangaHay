@@ -50,7 +50,7 @@ class ChapController extends Controller
         // Validate dữ liệu từ React gửi lên
         $request->validate([
             'id_manga' => 'required|exists:truyen,id',
-            'ten_chap' => 'nullable|string|max:255', 
+            'tieu_de' => 'nullable|string|max:255', 
             'so_chuong' => 'required|integer',       
             'noi_dung' => 'required|array',          // Mảng ảnh
             'noi_dung.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120', 
@@ -81,7 +81,7 @@ class ChapController extends Controller
         Chap::create([
             'id_manga' => $request->id_manga,
             'so_chuong' => $request->so_chuong,
-            'tieu_de' => $request->ten_chap, 
+            'tieu_de' => $request->tieu_de, 
             'danh_sach_anh' => json_encode($imagePaths),
         ]);
 
@@ -94,7 +94,7 @@ class ChapController extends Controller
 
         $request->validate([
             'id_manga' => 'required|exists:truyen,id',
-            'ten_chap' => 'nullable|string|max:255',
+            'tieu_de' => 'nullable|string|max:255',
             'so_chuong' => 'required|integer',
             'noi_dung' => 'required|array',
         ]);
@@ -141,7 +141,7 @@ class ChapController extends Controller
         $chap->update([
             'id_manga' => $request->id_manga,
             'so_chuong' => $request->so_chuong,
-            'tieu_de' => $request->ten_chap, 
+            'tieu_de' => $request->tieu_de, 
             'danh_sach_anh' => json_encode($newImagePaths),
         ]);
 

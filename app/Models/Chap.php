@@ -12,7 +12,7 @@ class Chap extends Model
     protected $table = 'chaps';
     protected $fillable = [
         'id_manga',
-        'ten_chap',
+        'tieu_de',
         'so_chuong',
         'noi_dung_chu',
         'danh_sach_anh',
