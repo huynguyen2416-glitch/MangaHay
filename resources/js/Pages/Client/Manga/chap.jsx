@@ -12,8 +12,8 @@ export default function Chap({ manga, chapter, images, prevUrl, nextUrl, danhSac
         <div className="bg-orange-50/40 min-h-screen text-gray-800 pb-12 font-sans">
             <Head title={`Chương ${chapter.so_chuong} - ${manga.ten_truyen}`} />
 
-            {/* THANH ĐIỀU HƯỚNG TRÊN CÙNG (Đã gỡ bỏ ClientLayout để không bị vướng Sidebar/Logo) */}
-            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-orange-200 shadow-sm py-2 sm:py-3 px-3 sm:px-4 z-50 flex flex-col sm:flex-row items-center justify-center relative gap-3 sm:gap-0">
+            {/* THANH ĐIỀU HƯỚNG TRÊN CÙNG  */}
+            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-orange-200 shadow-sm py-2 sm:py-3 px-3 sm:px-4 z-50 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-0">
                 
                 {/* Nút Quay lại truyện (Nằm tuyệt đối ở góc trái trên Desktop) */}
                 <div className="sm:absolute sm:left-4 w-full sm:w-auto text-center sm:text-left">

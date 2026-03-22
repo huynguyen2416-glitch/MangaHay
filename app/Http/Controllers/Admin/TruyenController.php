@@ -50,11 +50,11 @@ class TruyenController extends Controller
         }
 
         Truyen::create([
-            'id_nguoidang' => Auth::id(),    // Lấy ID admin đang đăng nhập
+            'id_nguoidang' => Auth::id(),   
             'ten_truyen' => $request->ten_truyen,
             'tac_gia' => $request->tac_gia,
-            'mo_ta' => $request->mo_ta,      // Đảm bảo form React đang gửi biến mo_ta
-            'anh_bia' => $anhBiaPath,        // Gọi đúng biến $anhBiaPath
+            'mo_ta' => $request->mo_ta,      
+            'anh_bia' => $anhBiaPath,       
             'trang_thai' => $request->trang_thai ?? 1
         ]);
 

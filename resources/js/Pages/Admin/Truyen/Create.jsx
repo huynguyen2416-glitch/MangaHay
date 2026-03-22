@@ -6,6 +6,7 @@ export default function Create({ auth }) {
     // Khởi tạo form với các trường khớp với Database của bạn
     const { data, setData, post, processing, errors } = useForm({
         ten_truyen: '',
+        tac_gia: '',
         anh_bia: '',
         mo_ta: '',
         // Thêm các trường khác nếu DB bạn yêu cầu (VD: tac_gia, trang_thai)
@@ -34,13 +35,24 @@ export default function Create({ auth }) {
                                     type="text" 
                                     value={data.ten_truyen}
                                     onChange={(e) => setData('ten_truyen', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="block w-full border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
                                     placeholder="Nhập tên truyện..."
                                     required
                                 />
                                 {errors.ten_truyen && <div className="text-red-500 text-sm mt-1">{errors.ten_truyen}</div>}
                             </div>
-
+                            {/* Tên tác giả */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Tên tác giả</label>
+                                <input 
+                                    type="text" 
+                                    value={data.tac_gia} 
+                                    onChange={e => setData('tac_gia', e.target.value)} 
+                                    className="block w-full border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="Nhập tên tác giả..."
+                                />
+                                {errors.tac_gia && <div className="text-red-500 text-sm mt-1">{errors.tac_gia}</div>}
+                            </div>
                             {/* Ảnh bìa */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Ảnh Bìa</label>
@@ -59,7 +71,7 @@ export default function Create({ auth }) {
                                     rows="5"
                                     value={data.mo_ta}
                                     onChange={(e) => setData('mo_ta', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
                                     placeholder="Nhập tóm tắt..."
                                 ></textarea>
                                 {errors.mo_ta && <div className="text-red-500 text-sm mt-1">{errors.mo_ta}</div>}
@@ -76,7 +88,7 @@ export default function Create({ auth }) {
                                 <button 
                                     type="submit" 
                                     disabled={processing}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                                    className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 disabled:opacity-50"
                                 >
                                     {processing ? 'Đang lưu...' : 'Lưu Truyện'}
                                 </button>

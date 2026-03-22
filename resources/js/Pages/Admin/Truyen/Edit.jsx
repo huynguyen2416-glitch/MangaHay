@@ -6,7 +6,8 @@ export default function Edit({ auth, truyen }) {
     // 1. Thay 'put' bằng 'post', thêm _method: 'put'
     const { data, setData, post, processing, errors } = useForm({
         ten_truyen: truyen.ten_truyen || '',
-        anh_bia: null, // Đặt là null để nhận file mới
+        tac_gia: truyen.tac_gia || '',
+        anh_bia: null,
         mo_ta: truyen.mo_ta || '',
         _method: 'put', 
     });
@@ -37,12 +38,23 @@ export default function Edit({ auth, truyen }) {
                                     type="text" 
                                     value={data.ten_truyen}
                                     onChange={(e) => setData('ten_truyen', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    className="block w-full border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
                                     required
                                 />
                                 {errors.ten_truyen && <div className="text-red-500 text-sm mt-1">{errors.ten_truyen}</div>}
                             </div>
-
+                            {/* Tên tác giả */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Tên tác giả</label>
+                                <input 
+                                    type="text" 
+                                    value={data.tac_gia} 
+                                    onChange={e => setData('tac_gia', e.target.value)} 
+                                    className="block w-full border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="Đang cập nhật..."
+                                />
+                                {errors.tac_gia && <div className="text-red-500 text-sm mt-1">{errors.tac_gia}</div>}
+                            </div>
                             {/* Ảnh bìa */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Đổi Ảnh Bìa (Bỏ trống nếu giữ nguyên)</label>
@@ -62,7 +74,7 @@ export default function Edit({ auth, truyen }) {
                                     rows="5"
                                     value={data.mo_ta}
                                     onChange={(e) => setData('mo_ta', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    className="block w-full border border-gray-300 p-2 rounded-md bg-gray-50 focus:ring-orange-500 focus:border-orange-500"
                                 ></textarea>
                                 {errors.mo_ta && <div className="text-red-500 text-sm mt-1">{errors.mo_ta}</div>}
                             </div>
