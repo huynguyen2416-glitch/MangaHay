@@ -1,19 +1,17 @@
 <?php
+
 use App\Http\Controllers\Client\TruyenController;
 use App\Http\Controllers\Client\ChapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TruyenController as AdminTruyenController;
 use App\Http\Controllers\Admin\ChapController as AdminChapController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth; 
 use Inertia\Inertia;
-use App\Http\Middleware\CheckRole;
 
-
-// 1. ROUTE ĐỘC GIẢ 
-
+// 1. ROUTE ĐỘC GIẢ (Ai cũng vào được, không cần đăng nhập)
 Route::get('/', function () {
     // Lấy dữ liệu truyện từ Database
     $truyen = DB::table('truyen')->get(); 
@@ -21,33 +19,42 @@ Route::get('/', function () {
         'truyen' => $truyen
     ]);
 })->name('home');
+
 Route::group(['as' => 'client.'], function () {
-    
     // Link xem chi tiết truyện: web.com/truyen/1
     Route::get('/truyen/{id}', [TruyenController::class, 'show'])->name('manga.show');
-    
     // Link đọc truyện: web.com/chuong/15
     Route::get('/chuong/{id}', [ChapController::class, 'show'])->name('chapter.show');
-    
 });
 
 
-// 2. ROUTE ADMIN
-
-Route::prefix('admin')->name('admin.')->middleware(['auth', CheckRole::class])->group(function () {
+// 2. ROUTE ADMIN (Bắt buộc đăng nhập & Đã chia quyền chi tiết)
+Route::prefix('admin')->name('admin.')->group(function () {
     
-    // Trang chủ Dashboard Admin
-    Route::get('/', function () {
-        return Inertia::render('Admin/Dashboard'); 
-    })->name('dashboard');
-    Route::resource('users', UserController::class);
-    Route::resource('truyen', AdminTruyenController::class);
-    Route::resource('chap', AdminChapController::class);
+    // 2.1. Nhóm cho phép Admin (1), Staff (2), Uploader (3) truy cập
+    Route::middleware(['auth', 'role:1,2,3'])->group(function () {
+        // Trang chủ Dashboard Admin
+        Route::get('/', function () {
+            return Inertia::render('Admin/Dashboard'); 
+        })->name('dashboard');
+    });
+
+    // 2.2. Nhóm cho phép Admin (1) và Uploader (3) quản lý truyện
+    Route::middleware(['auth', 'role:1,3'])->group(function () {
+        Route::resource('truyen', AdminTruyenController::class);
+        Route::resource('chap', AdminChapController::class);
+    });
+
+    // 2.3. Nhóm cực kỳ quan trọng: CHỈ Admin (1) mới được phép truy cập
+    Route::middleware(['auth', 'role:1'])->group(function () {
+        Route::resource('users', UserController::class);
+        Route::resource('roles', RoleController::class);
+    });
+
 });
 
 
-// 3. ROUTE CÁ NHÂN 
-
+// 3. ROUTE CÁ NHÂN (Dành cho mọi user đã đăng nhập)
 Route::get('/dashboard', function () {
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
