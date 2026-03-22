@@ -47,97 +47,124 @@ class ChapController extends Controller
 
     public function store(Request $request)
     {
+        // Validate dữ liệu từ React gửi lên
         $request->validate([
-            'id_manga' => 'required',
-            'ten_chap' => 'required',
-            'so_chuong' => 'required',
+            'id_manga' => 'required|exists:truyen,id',
+            'ten_chap' => 'nullable|string|max:255', 
+            'so_chuong' => 'required|integer',       
+            'noi_dung' => 'required|array',          // Mảng ảnh
+            'noi_dung.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120', 
+        ]);
+
+        $imagePaths = [];
+
+        // Xử lý lưu ảnh
+        if ($request->hasFile('noi_dung')) {
+            $files = $request->file('noi_dung');
+            $folderPath = 'images/chaps/truyen_' . $request->id_manga . '/chuong_' . $request->so_chuong;
+            
+            if (!File::exists(public_path($folderPath))) {
+                File::makeDirectory(public_path($folderPath), 0755, true);
+            }
+
+            foreach ($files as $index => $file) {
+                $pageNumber = sprintf('%03d', $index + 1); 
+                $extension = $file->getClientOriginalExtension();
+                $filename = 'trang_' . $pageNumber . '_' . time() . '.' . $extension;
+
+                $file->move(public_path($folderPath), $filename);
+                $imagePaths[] = '/' . $folderPath . '/' . $filename;
+            }
+        }
+
+        // Lưu vào Database với tên cột CHUẨN XÁC
+        Chap::create([
+            'id_manga' => $request->id_manga,
+            'so_chuong' => $request->so_chuong,
+            'tieu_de' => $request->ten_chap, 
+            'danh_sach_anh' => json_encode($imagePaths),
+        ]);
+
+        return redirect()->route('admin.chap.index')->with('success', 'Thêm chapter mới thành công!');
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $chap = Chap::findOrFail($id);
+
+        $request->validate([
+            'id_manga' => 'required|exists:truyen,id',
+            'ten_chap' => 'nullable|string|max:255',
+            'so_chuong' => 'required|integer',
             'noi_dung' => 'required|array',
         ]);
 
-        $data = $request->all();
-
-        // 1. ĐỔI TÊN CỘT: Dịch 'ten_chap' từ form sang 'tieu_de' cho Database hiểu
-        $data['tieu_de'] = $request->ten_chap;
-        unset($data['ten_chap']); // Xóa key cũ để tránh lỗi
-
-        // 2. ĐỔI TÊN CỘT ẢNH: Dịch 'noi_dung' sang 'danh_sach_anh'
-        if ($request->hasFile('noi_dung')) {
-            $files = $request->file('noi_dung');
-            usort($files, function($a, $b) {
-                return strnatcasecmp($a->getClientOriginalName(), $b->getClientOriginalName());
-            });
-            $imagePaths = [];
-            $folderPath = 'images/chaps/' . $request->id_manga;
-            
-            if (!File::exists(public_path($folderPath))) {
-                File::makeDirectory(public_path($folderPath), 0755, true);
-            }
-
-            foreach ($request->file('noi_dung') as $key => $file) {
-                $extension = $file->getClientOriginalExtension();
-                $thutu = sprintf('%03d', $key);
-                $filename = time() . '_' . $request->id_manga . '_chap-' . $request->so_chuong . '_trang-' . $thutu  . '.' . $extension;
-                
-                $file->move(public_path($folderPath), $filename);
-                $imagePaths[] = '/' . $folderPath . '/' . $filename;
-            }
-            // Lưu vào đúng cột 'danh_sach_anh'
-            $data['danh_sach_anh'] = json_encode($imagePaths); 
-            unset($data['noi_dung']); 
+        $folderPath = 'images/chaps/truyen_' . $request->id_manga . '/chuong_' . $request->so_chuong;
+        if (!File::exists(public_path($folderPath))) {
+            File::makeDirectory(public_path($folderPath), 0755, true);
         }
 
-        Chap::create($data);
-        return redirect()->route('admin.chap.index');
-    }
+        $newImagePaths = [];
+        $submittedOldUrls = []; 
 
-    public function update(Request $request, Chap $chap)
-    {
-        $data = $request->all();
+        if ($request->has('noi_dung')) {
+            foreach ($request->noi_dung as $index => $item) {
+                $pageNumber = sprintf('%03d', $index + 1);
 
-        // 1. ĐỔI TÊN CỘT: Dịch 'ten_chap' sang 'tieu_de'
-        if (isset($data['ten_chap'])) {
-            $data['tieu_de'] = $data['ten_chap'];
-            unset($data['ten_chap']);
-        }
-
-        // 2. ĐỔI TÊN CỘT ẢNH
-        if ($request->hasFile('noi_dung')) {
-            $files = $request->file('noi_dung');
-            usort($files, function($a, $b) {
-                return strnatcasecmp($a->getClientOriginalName(), $b->getClientOriginalName());
-            });
-            $oldImages = json_decode($chap->danh_sach_anh, true);
-            if (is_array($oldImages)) {
-                foreach ($oldImages as $oldImg) {
-                    if (File::exists(public_path($oldImg))) {
-                        File::delete(public_path($oldImg));
-                    }
+                // Nếu là file ảnh mới tải lên
+                if (is_file($item) || $item instanceof \Illuminate\Http\UploadedFile) {
+                    $extension = $item->getClientOriginalExtension();
+                    $filename = 'trang_' . $pageNumber . '_' . time() . '.' . $extension;
+                    $item->move(public_path($folderPath), $filename);
+                    $newImagePaths[] = '/' . $folderPath . '/' . $filename;
+                }
+                // Nếu là link ảnh cũ
+                else if (is_string($item)) {
+                    $newImagePaths[] = $item; 
+                    $submittedOldUrls[] = $item; 
                 }
             }
+        }
 
-            // Lưu ảnh mới
-            $imagePaths = [];
-            $folderPath = 'images/chaps/' . $request->id_manga;
-            
-            if (!File::exists(public_path($folderPath))) {
-                File::makeDirectory(public_path($folderPath), 0755, true);
-            }
+        // Xóa ảnh cũ khỏi ổ cứng nếu bị loại bỏ
+        $oldDbImages = json_decode($chap->danh_sach_anh, true) ?? [];
+        $imagesToDelete = array_diff($oldDbImages, $submittedOldUrls);
 
-            foreach ($request->file('noi_dung') as $key => $file) {
-                $extension = $file->getClientOriginalExtension();
-                $thutu = sprintf('%03d', $key);
-                $filename = time() . '_' . $request->id_manga . '_chap-' . $request->so_chuong . '_trang-' . $thutu . '.' . $extension;
-                $file->move(public_path($folderPath), $filename);
-                $imagePaths[] = '/' . $folderPath . '/' . $filename;
+        foreach ($imagesToDelete as $oldImage) {
+            $fullPath = public_path(ltrim($oldImage, '/'));
+            if (File::exists($fullPath)) {
+                File::delete($fullPath); 
             }
-            // Cập nhật đường dẫn mới vào cột 'danh_sach_anh'
-            $data['danh_sach_anh'] = json_encode($imagePaths); 
-        } 
+        }
+
+        // Cập nhật Database
+        $chap->update([
+            'id_manga' => $request->id_manga,
+            'so_chuong' => $request->so_chuong,
+            'tieu_de' => $request->ten_chap, 
+            'danh_sach_anh' => json_encode($newImagePaths),
+        ]);
+
+        return redirect()->route('admin.chap.index')->with('success', 'Cập nhật chapter thành công!');
+    }
+    public function destroy(string $id)
+    {
+        // 1. Tìm chương cần xoá
+        $chap = Chap::findOrFail($id);
+
+        // 2. Tìm và xoá thư mục vật lý chứa ảnh của chương này
+        // Đường dẫn lúc mình lưu là: images/chaps/truyen_{id}/chuong_{so_chuong}
+        $folderPath = 'images/chaps/truyen_' . $chap->id_manga . '/chuong_' . $chap->so_chuong;
         
-        // Dù có up ảnh hay không thì vẫn phải xóa key 'noi_dung' vì DB không có cột này
-        unset($data['noi_dung']); 
+        // Kiểm tra xem thư mục có tồn tại không, nếu có thì xoá toàn bộ thư mục và ruột bên trong
+        if (File::exists(public_path($folderPath))) {
+            File::deleteDirectory(public_path($folderPath));
+        }
 
-        $chap->update($data);
-        return redirect()->route('admin.chap.index');
+        // 3. Xoá dữ liệu trong Database
+        $chap->delete();
+
+        // 4. Quay lại trang danh sách và báo thành công
+        return redirect()->route('admin.chap.index')->with('success', 'Đã xoá chương và toàn bộ ảnh thành công!');
     }
 }

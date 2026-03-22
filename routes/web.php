@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; 
 use Inertia\Inertia;
-
+use App\Http\Middleware\CheckRole;
 
 
 // 1. ROUTE ĐỘC GIẢ 
@@ -34,20 +34,12 @@ Route::group(['as' => 'client.'], function () {
 
 // 2. ROUTE ADMIN
 
-Route::middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', CheckRole::class])->group(function () {
     
-    Route::get('/admin', function () {
-        $user = Auth::user();
-
-
-        if (!$user || ($user->id !== 1 )) {
-            return redirect('/');
-        }
+    // Trang chủ Dashboard Admin
+    Route::get('/', function () {
         return Inertia::render('Admin/Dashboard'); 
-    })->name('admin.dashboard');
-
-});
-Route::prefix('admin')->name('admin.')->group(function () {
+    })->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('truyen', AdminTruyenController::class);
     Route::resource('chap', AdminChapController::class);

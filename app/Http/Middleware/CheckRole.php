@@ -9,22 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     */
-    public function handle(Request $request, Closure $next, string $roleId): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        // 1. Nếu chưa đăng nhập -> đuổi ra trang login
+        // 1. Kiểm tra nếu chưa đăng nhập thì đuổi về trang chủ
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect('/');
         }
 
-        // 2. Nếu role_id của người dùng KHỚP với roleId yêu cầu ở Route -> cho đi tiếp
-        if (Auth::user()->role_id == $roleId) {
-            return $next($request);
+        // 2. Kiểm tra nếu đã đăng nhập nhưng KHÔNG PHẢI Admin (id = 1) thì cũng đuổi về
+        if (Auth::user()->id !== 1) {
+            return redirect('/');
         }
 
-        // 3. Nếu đăng nhập rồi nhưng sai quyền -> Báo lỗi 404 (giả vờ trang không tồn tại)
-        abort(404);
+        // 3. Đúng là Admin thì cho đi tiếp
+        return $next($request);
     }
 }
