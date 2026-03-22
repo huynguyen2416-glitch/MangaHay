@@ -12,31 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            
-            // Liên kết khóa ngoại với bảng roles
-            $table->foreignId('role_id')->default(2)->constrained('roles'); // Mặc định 2 là Customer
-            
-            $table->string('name'); // Tên hiển thị
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('role_id')->default(2)->index('users_role_id_foreign');
+            $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
             $table->string('so_dien_thoai', 15)->nullable();
             $table->string('anh_dai_dien')->nullable();
-            $table->integer('so_du_coin')->default(0); // coin để mua truyện
-            $table->boolean('trang_thai')->default(1); // 1: Hoạt động, 0: Bị khóa
-            
+            $table->integer('so_du_coin')->default(0);
+            $table->boolean('trang_thai')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
-
-        
     }
+
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
     }
 };

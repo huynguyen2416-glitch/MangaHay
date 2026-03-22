@@ -6,19 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('truyen_the_loai', function (Blueprint $table) {
-            // Nối với bảng mangas
-            $table->foreignId('id_manga')->constrained('truyen')->onDelete('cascade');
-            // Nối với bảng theloai (mà bạn đã tạo ở bước trước)
-            $table->foreignId('id_theloai')->constrained('the_loai')->onDelete('cascade');
-            
-            // Khóa chính kép (Để 1 truyện không bị gán trùng 1 thể loại 2 lần)
+            $table->unsignedBigInteger('id_manga');
+            $table->unsignedBigInteger('id_theloai')->index('truyen_the_loai_id_theloai_foreign');
+
             $table->primary(['id_manga', 'id_theloai']);
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('truyen_the_loai');
