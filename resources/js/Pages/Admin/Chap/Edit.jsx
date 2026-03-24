@@ -146,7 +146,7 @@ export default function EditChap({ auth, truyens, chap }) {
                                 <p className="text-xs text-gray-500 mb-4">Các ảnh hiện tại của chương. Bạn có thể kéo thả để đổi vị trí cũ/mới, hoặc bấm X để xoá.</p>
                                 {errors.noi_dung && <div className="text-red-500 text-sm mt-1 mb-2">{errors.noi_dung}</div>}
 
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-6 p-4 bg-gray-100 border-2 border-dashed border-gray-300 min-h-[150px] rounded-lg">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-6 p-4 bg-gray-100 border-2 border-dashed border-gray-300 min-h-[150px] rounded-lg">
                                     {previewImages.map((item, index) => (
                                         <div 
                                             key={item.id} draggable
