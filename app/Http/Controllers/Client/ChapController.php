@@ -35,8 +35,6 @@ class ChapController extends Controller
                             ->orderBy('so_chuong', 'asc')
                             ->first();
 
-        // LẤY THÊM: Danh sách các chương để làm Menu Dropdown (Xếp từ mới -> cũ)
-   
         $danhSachChuong = Chap::where('id_manga', $manga->id)
                             ->orderBy('so_chuong', 'desc')
                             ->get(['id', 'so_chuong', 'tieu_de']);
@@ -47,7 +45,7 @@ class ChapController extends Controller
             'images' => $images,
             'prevUrl' => $prevChapter ? route('client.chapter.show', $prevChapter->id) : null,
             'nextUrl' => $nextChapter ? route('client.chapter.show', $nextChapter->id) : null,
-            'danhSachChuong' => $danhSachChuong, // Gửi qua React
+            'danhSachChuong' => $danhSachChuong, 
         ]);
     }
 }

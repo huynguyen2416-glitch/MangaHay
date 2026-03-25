@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import ClientLayout from '@/Layouts/ClientLayout'; 
 
-export default function Welcome({ truyen }) {
+export default function Welcome({ manga }) {
     return (
         <ClientLayout>
             <Head title="Trang chủ" />
@@ -17,37 +17,38 @@ export default function Welcome({ truyen }) {
                 {/* Danh sách truyện */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
                     
-                    {truyen && truyen.length > 0 ? (
-                        truyen.map((truyen) => (
+                    {manga && manga.length > 0 ? (
+                        // duyệt qua từng item trong truyện
+                        manga.map((item) => (
                             <Link 
-                                href={`/truyen/${truyen.id}`} 
-                                key={truyen.id} 
+                                href={`/truyen/${item.id}`} 
+                                key={item.id} 
                                 className="group flex flex-col cursor-pointer"
                             >
-                                {/* 1. PHẦN ẢNH BÌA (Ở TRÊN) */}
+                                {/* 1. PHẦN ẢNH BÌA  */}
                                 <div className="relative aspect-[3/4] overflow-hidden rounded-md shadow-sm group-hover:shadow-md transition-shadow duration-200 bg-gray-200 border border-gray-100">
                                     <img 
-                                        src={truyen.anh_bia} 
-                                        alt={truyen.ten_truyen} 
+                                        src={item.anh_bia} 
+                                        alt={item.ten_truyen} 
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         onError={(e) => {
                                             e.target.onerror = null; 
                                             e.target.src = 'https://via.placeholder.com/300x400?text=No+Image';
                                         }}
                                     />
-                                    {/* Nhãn Chapter hiển thị đè lên góc phải của ảnh */}
+                                    {/* ô chứa latestchapter */}
                                     <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-bold px-2 py-1 rounded shadow">
-                                        {truyen.latestChapter ? `Chương ${truyen.latestChapter.so_chapter}` : 'Chưa có chapter'}
+                                        {item.latest_chapter ? `Chương ${item.latest_chapter.so_chuong}` : 'Chưa có chương'}
                                     </div>
                                 </div>
 
-                                {/* 2. PHẦN TÊN TRUYỆN (Ở DƯỚI) */}
+                                {/* 2. PHẦN TÊN TRUYỆN  */}
                                 <div className="mt-2 text-center sm:text-left">
                                     <h3 
                                         className="font-bold text-sm text-gray-800 leading-tight line-clamp-2 group-hover:text-orange-500 transition-colors"
-                                        title={truyen.ten_truyen} // Di chuột vào sẽ hiện full tên nếu bị cắt ngắn
+                                        title={item.ten_truyen} 
                                     >
-                                        {truyen.ten_truyen}
+                                        {item.ten_truyen}
                                     </h3>
                                 </div>
                             </Link>

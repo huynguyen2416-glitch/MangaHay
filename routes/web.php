@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Client\WelcomeController;
 use App\Http\Controllers\Client\TruyenController;
 use App\Http\Controllers\Client\ChapController;
 use App\Http\Controllers\Client\CommentController;
@@ -13,13 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 // 1. ROUTE ĐỘC GIẢ (Ai cũng vào được, không cần đăng nhập)
-Route::get('/', function () {
-    // Lấy dữ liệu truyện từ Database
-    $truyen = DB::table('truyen')->get(); 
-    return Inertia::render('Client/Welcome', [
-        'truyen' => $truyen
-    ]);
-})->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 Route::group(['as' => 'client.'], function () {
     // Link xem chi tiết truyện: web.com/truyen/1
