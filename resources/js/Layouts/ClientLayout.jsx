@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '@/Components/Client/Header';
 import Sidebar from '@/Components/Client/Sidebar';
 import Footer from '@/Components/Client/Footer';
-
+import Chatbox from '@/Components/Chatbox';
 export default function ClientLayout({ children, hideSidebar = false }) {
     return (
         <div className="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
@@ -22,7 +22,7 @@ export default function ClientLayout({ children, hideSidebar = false }) {
                     </div>
                 )}
             </div>
-
+                <Chatbox />
             <Footer />
             
         </div>

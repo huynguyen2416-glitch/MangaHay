@@ -12,18 +12,25 @@ use Illuminate\Support\Str;
 class ChapController extends Controller
 {
     public function index(Request $request)
-    {
-        // Có thể lọc chapter theo id_manga nếu truyền url: /admin/chap?manga_id=1
-        $query = Chap::with('truyen')->orderBy('id', 'desc');
-        
-        if ($request->has('manga_id')) {
-            $query->where('id_manga', $request->manga_id);
-        }
+{
+    // 1. Khởi tạo query và lấy kèm dữ liệu truyện để hiển thị tên
+    $query = Chap::with('truyen');
 
-        return Inertia::render('Admin/Chap/Index', [
-            'chaps' => $query->paginate(15)
-        ]);
+    // 2. Chức năng vàng: Lọc theo ID Truyện nếu có yêu cầu từ giao diện
+    if ($request->filled('manga_id')) {
+        $query->where('id_manga', $request->manga_id);
     }
+
+    // 3. Phân trang
+
+    $chaps = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+
+    // 4. Trả về Inertia
+    return Inertia::render('Admin/Chap/Index', [
+        'chaps' => $chaps,
+        'filters' => $request->only(['manga_id'])
+    ]);
+}
 
     public function create()
     {

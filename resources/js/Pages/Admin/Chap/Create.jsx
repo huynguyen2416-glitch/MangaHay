@@ -3,14 +3,15 @@ import { useForm, Link } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout'; 
 
 export default function CreateChap({ auth, truyens }) {
-    // 1. Quản lý form data (Giữ nguyên các biến của bạn)
+    // 1. Form state với Inertia.js
+    const params = new URLSearchParams(window.location.search);
+    const defaultMangaId = params.get('manga_id') || '';
     const { data, setData, post, processing, errors } = useForm({
-        id_manga: '',
+        id_manga: defaultMangaId, // Tự động điền ID truyện nếu có trên URL
         tieu_de: '',
         so_chuong: '',
-        noi_dung: [], // Mảng chứa các file ảnh thực tế để gửi lên server
+        noi_dung: [],
     });
-
     // 2. Logic cho tính năng xem trước & Kéo thả ảnh
     const [previewImages, setPreviewImages] = useState([]);
     const dragItem = useRef(null);
@@ -71,20 +72,27 @@ export default function CreateChap({ auth, truyens }) {
                             
                             {/* Chọn bộ truyện */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Chọn bộ truyện</label>
-                                <select 
-                                    value={data.id_manga} 
-                                    onChange={e => setData('id_manga', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    required
-                                >
-                                    <option value="">-- Chọn truyện --</option>
-                                    {truyens.map(t => (
-                                        <option key={t.id} value={t.id}>{t.ten_truyen}</option>
-                                    ))}
-                                </select>
-                                {errors.id_manga && <div className="text-red-500 text-sm mt-1">{errors.id_manga}</div>}
-                            </div>
+                            <label className="block text-sm font-medium text-gray-700">Chọn bộ truyện</label>
+                            <select 
+                                value={data.id_manga} 
+                                onChange={e => setData('id_manga', e.target.value)}
+                                className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm ${defaultMangaId ? 'bg-gray-200 cursor-not-allowed' : ''}`}
+                                required
+                                disabled={!!defaultMangaId} /* Khóa ô này nếu đã có ID từ URL */
+                            >
+                                <option value="">-- Chọn truyện --</option>
+                                {truyens.map(t => (
+                                    <option key={t.id} value={t.id}>{t.ten_truyen}</option>
+                                ))}
+                            </select>
+                            {/* Gợi ý cho Admin biết */}
+                            {defaultMangaId && (
+                                <p className="text-sm text-orange-600 mt-2 font-medium">
+                                    <i className="fas fa-info-circle mr-1"></i> Chapter này sẽ được thêm tự động vào truyện bạn vừa chọn.
+                                </p>
+                            )}
+                            {errors.id_manga && <div className="text-red-500 text-sm mt-1">{errors.id_manga}</div>}
+                        </div>
 
                             {/* Tên Chapter và Số chương */}
                             <div className="grid grid-cols-2 gap-4">

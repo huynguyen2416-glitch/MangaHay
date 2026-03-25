@@ -1,31 +1,31 @@
 import { Head, Link } from '@inertiajs/react';
 import ClientLayout from '@/Layouts/ClientLayout'; 
+import FilterBar from '@/Components/FilterBar';
+import Pagination from '@/Components/Pagination';
 
 export default function Welcome({ manga }) {
+    const truyenList = manga?.data || manga || [];
+
     return (
         <ClientLayout>
             <Head title="Trang chủ" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-10">
-                
-                {/* Tiêu đề Section */}
                 <div className="flex items-center mb-6">
                     <div className="w-1 h-6 bg-orange-500 rounded mr-3"></div>
-                    <h2 className="text-xl font-bold uppercase tracking-wider text-gray-800">Truyện Mới Cập Nhật</h2>
+                    <h2 className="text-xl font-bold uppercase tracking-wider text-gray-800">
+                        Truyện Mới Cập Nhật
+                    </h2>
                 </div>
 
-                {/* Danh sách truyện */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                    
-                    {manga && manga.length > 0 ? (
-                        // duyệt qua từng item trong truyện
-                        manga.map((item) => (
+                    {truyenList.length > 0 ? (
+                        truyenList.map((item) => (
                             <Link 
                                 href={`/truyen/${item.id}`} 
                                 key={item.id} 
                                 className="group flex flex-col cursor-pointer"
                             >
-                                {/* 1. PHẦN ẢNH BÌA  */}
                                 <div className="relative aspect-[3/4] overflow-hidden rounded-md shadow-sm group-hover:shadow-md transition-shadow duration-200 bg-gray-200 border border-gray-100">
                                     <img 
                                         src={item.anh_bia} 
@@ -36,13 +36,12 @@ export default function Welcome({ manga }) {
                                             e.target.src = 'https://via.placeholder.com/300x400?text=No+Image';
                                         }}
                                     />
-                                    {/* ô chứa latestchapter */}
+                                    
                                     <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-bold px-2 py-1 rounded shadow">
                                         {item.latest_chapter ? `Chương ${item.latest_chapter.so_chuong}` : 'Chưa có chương'}
                                     </div>
                                 </div>
 
-                                {/* 2. PHẦN TÊN TRUYỆN  */}
                                 <div className="mt-2 text-center sm:text-left">
                                     <h3 
                                         className="font-bold text-sm text-gray-800 leading-tight line-clamp-2 group-hover:text-orange-500 transition-colors"
@@ -58,8 +57,13 @@ export default function Welcome({ manga }) {
                             Chưa có truyện nào được cập nhật.
                         </div>
                     )}
-
                 </div>
+
+                {manga?.links && (
+                    <div className="mt-8 flex justify-center">
+                        <Pagination links={manga.links} />
+                    </div>
+                )}
             </div>
         </ClientLayout>
     );

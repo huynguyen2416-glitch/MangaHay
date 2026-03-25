@@ -10,8 +10,6 @@
     body {
         @apply bg-gray-200 text-gray-900 antialiased font-sans min-h-screen;
     }
-
-    /* Tùy chỉnh thanh cuộn (Scrollbar) cho giống web truyện */
     ::-webkit-scrollbar {
         width: 8px;
     }
@@ -24,6 +22,8 @@
     ::-webkit-scrollbar-thumb:hover {
         @apply bg-orange-600;
     }
+    .fas, .far, .fal, .fab, .fa {
+        @apply text-xl;}
 }
 
 /* =========================================
