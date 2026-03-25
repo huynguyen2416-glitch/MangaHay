@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Client\TruyenController;
 use App\Http\Controllers\Client\ChapController;
+use App\Http\Controllers\Client\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
@@ -25,6 +26,8 @@ Route::group(['as' => 'client.'], function () {
     Route::get('/truyen/{id}', [TruyenController::class, 'show'])->name('manga.show');
     // Link đọc truyện: web.com/chuong/15
     Route::get('/chuong/{id}', [ChapController::class, 'show'])->name('chapter.show');
+    Route::post('/truyen/{id_manga}/binh-luan', [CommentController::class, 'store'])->name('comment.store');
+
 });
 
 

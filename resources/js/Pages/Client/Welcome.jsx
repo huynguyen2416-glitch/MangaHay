@@ -37,7 +37,7 @@ export default function Welcome({ truyen }) {
                                     />
                                     {/* Nhãn Chapter hiển thị đè lên góc phải của ảnh */}
                                     <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[11px] font-bold px-2 py-1 rounded shadow">
-                                        Chapter 5
+                                        {truyen.latestChapter ? `Chương ${truyen.latestChapter.so_chapter}` : 'Chưa có chapter'}
                                     </div>
                                 </div>
 

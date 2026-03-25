@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import ClientLayout from '@/Layouts/ClientLayout'; 
+import CommentSection from '@/Components/CommentSection';
 
-export default function Detail({ manga, chapters = [] }) {
+export default function Detail({ manga, chapters = [], comments = [] }) {
     if (!manga) {
         return (
             <ClientLayout>
@@ -96,6 +97,9 @@ export default function Detail({ manga, chapters = [] }) {
                     </ul>
                 </div>
             </div>
+            <div className="mt-12">
+                    <CommentSection id_manga={manga.id} comments={comments} />
+                </div>
         </ClientLayout>
     );
 }

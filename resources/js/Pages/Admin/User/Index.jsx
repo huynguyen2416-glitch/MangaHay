@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import Pagination from '@/Components/Pagination'; // Import chuẩn
 
 export default function Index({ users }) {
     // Dùng form chỉ để gọi hàm delete cho bảo mật
@@ -38,7 +39,7 @@ export default function Index({ users }) {
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            {users.map((u) => (
+                            {users.data.map((u) => (
                                 <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
                                     <td className="px-6 py-4">
                                         <div className="font-semibold text-gray-800">{u.name}</div>
@@ -46,18 +47,16 @@ export default function Index({ users }) {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 rounded text-xs font-bold ${u.role_id === 1 ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-600'}`}>
-                                            {u.role_name}
+                                            {u.role_name || (u.role_id === 1 ? 'Admin' : 'User')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right font-semibold text-yellow-500">
                                         {u.so_du_coin} <i className="fas fa-coins text-xs"></i>
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        {/* Nút Sửa */}
                                         <Link href={route('admin.users.edit', u.id)} className="text-blue-500 hover:text-blue-700 mx-2 transition">
                                             <i className="fas fa-edit"></i>
                                         </Link>
-                                        {/* Nút Xóa (Ko cho admin tự xóa mình) */}
                                         {u.id !== 1 && (
                                             <button onClick={() => handleDelete(u.id)} className="text-red-500 hover:text-red-700 mx-2 transition">
                                                 <i className="fas fa-trash"></i>
@@ -68,6 +67,9 @@ export default function Index({ users }) {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="px-6 py-4 border-t border-gray-100 bg-white">
+                    <Pagination links={users.links} />
                 </div>
             </div>
         </AdminLayout>

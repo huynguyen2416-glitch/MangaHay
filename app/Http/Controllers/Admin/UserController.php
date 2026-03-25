@@ -18,7 +18,7 @@ class UserController extends Controller
         $users = User::join('roles', 'users.role_id', '=', 'roles.id')
                      ->select('users.*', 'roles.ten_vaitro as role_name')
                      ->orderBy('id', 'desc')
-                     ->get();
+                     ->paginate(10);
 
         return Inertia::render('Admin/User/Index', [
             'users' => $users
@@ -56,7 +56,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
             'so_du_coin' => $request->so_du_coin ?? 0, // Mặc định 0 nếu không nhập
-             'sdt' => $request->sdt ?? null, // Mặc định null nếu không nhập
+            'sdt' => $request->sdt ?? null, // Mặc định null nếu không nhập
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Thêm người dùng thành công!');

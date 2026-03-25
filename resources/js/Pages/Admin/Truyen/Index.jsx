@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
-
+import Pagination from '@/Components/Pagination';
 import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function Index({ auth, truyens }) {
@@ -80,7 +80,8 @@ export default function Index({ auth, truyens }) {
                             </table>
                             
                             {/* Nút Phân trang (Nếu có nhiều truyện) */}
-                            <div className="mt-4">
+                            <div className="px-6 py-4 border-t border-gray-100 bg-white">
+                                <Pagination links={truyens.links} />
                             </div>
                         </div>
                     </div>
