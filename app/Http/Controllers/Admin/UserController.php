@@ -17,7 +17,7 @@ class UserController extends Controller
         // Lấy danh sách users kèm theo tên Role
         $users = User::join('roles', 'users.role_id', '=', 'roles.id')
                      ->select('users.*', 'roles.ten_vaitro as role_name')
-                     ->orderBy('id', 'desc')
+                     ->orderBy('users.id', 'desc')
                      ->paginate(10);
 
         return Inertia::render('Admin/User/Index', [
@@ -96,5 +96,26 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->back()->with('success', 'Đã xóa người dùng!');
+    }
+    // 6. Toggle trạng thái khóa/mở khóa User
+    public function handleToggleStatus($id)
+    {
+        // 1. Tự tìm user trong Database dựa vào ID gửi lên
+        $user = \App\Models\User::findOrFail($id);
+
+        // 2. Lấy ID của người đang đăng nhập (Admin đang thao tác)
+        $currentAdminId = \Illuminate\Support\Facades\Auth::id();
+
+        // 3. Không cho phép tự khóa chính mình (hoặc khóa Admin tối cao ID = 1)
+        if ($currentAdminId == $user->id || $user->id == 1) {
+            return redirect()->back()->with('error', 'Không thể thay đổi trạng thái của tài khoản này!');
+        }
+
+        // 4. Đảo ngược trạng thái
+        $user->trang_thai = !$user->trang_thai;
+        $user->save();
+
+        $message = $user->trang_thai ? 'Đã mở khóa tài khoản!' : 'Đã khóa tài khoản!';
+        return redirect()->back()->with('success', $message);
     }
 }

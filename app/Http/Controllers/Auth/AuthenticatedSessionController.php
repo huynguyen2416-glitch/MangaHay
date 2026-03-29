@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-
+use Illuminate\Validation\ValidationException;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -30,10 +30,17 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+        if (Auth::user()->trang_thai == 0) {
+     
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            throw ValidationException::withMessages([
+                'email' => 'Tài khoản của bạn đã bị khóa bởi Quản trị viên!',
+            ]);
+        }
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('welcome'));
     }
 
     /**

@@ -45,6 +45,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // 2.3. Nhóm cực kỳ quan trọng: CHỈ Admin (1) mới được phép truy cập
     Route::middleware(['auth', 'role:1'])->group(function () {
+        Route::patch('/users/{id}/toggle-status', [UserController::class, 'handleToggleStatus'])->name('users.toggle_status');
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
     });
